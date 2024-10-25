@@ -15,8 +15,8 @@ public class WelcomeScreen extends Screen {
 
         // Add labels with ballot information
         Label titleLabel = new Label("Welcome to the Voting System");
-        Label ballotTitleLabel = new Label("Ballot Title: " + ballotTitle);
-        Label ballotDescriptionLabel = new Label("Description: " + ballotDescription);
+        Label ballotTitleLabel = new Label(ballotTitle);
+        Label ballotDescriptionLabel = new Label(ballotDescription);
 
         // Add labels to VBox
         welcomeBox.getChildren().addAll(titleLabel, ballotTitleLabel, ballotDescriptionLabel);
