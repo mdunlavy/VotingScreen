@@ -24,5 +24,6 @@ public class WelcomeScreen extends Screen {
         // Add VBox to displayPane
         displayPane.getChildren().add(welcomeBox);
     }
+    
 }
 

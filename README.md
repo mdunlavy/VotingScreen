@@ -8,4 +8,12 @@ create screen that :
 
 TODO: 
 - create GUI based off ballot structure (both voter and official mode) 
+- we need to have a start screen, end screen, maybe once they're done we have a button that says "new voter" 
 - write methods that screen will provide to API (how we get input to screen back to API)
+
+
+do we need to write methods to take input from ballot or can we just create an example that we make up for our demo? 
+do we need to create the screens for starting an election? not just turning on but actually activating it? or can we assume that an election is "started" through the card that is put in? 
+
+
+
