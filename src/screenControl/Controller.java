@@ -62,9 +62,9 @@ public class Controller extends Application {
     }
 
     protected void navigateBegin() {
-        if (unlocked) {
-            currentScreenIndex = 0;
-            showScreen(currentScreenIndex + 2);
+        if (unlocked && propositions.size() >= 2) {
+            currentScreenIndex = 2;
+            showScreen(currentScreenIndex);
         }
     }
 
@@ -250,7 +250,6 @@ public class Controller extends Application {
     }
 
     public void setPropositions(List<Proposition> propositions) {
-        // TODO maybe find better way to handle this
         if (propositions.isEmpty() && currentScreenIndex != 0) {
             return;
         }
