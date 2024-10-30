@@ -1,10 +1,10 @@
 package testSuite;
 
 public class Proposition {
-    private String name;
-    private String description;
-    private int maxNumSelections;// I think for simplicity we will only be choosing one option per proposition
-    private String[] options;
+    private final String name;
+    private final String description;
+    private final int maxNumSelections;// I think for simplicity we will only be choosing one option per proposition
+    private final String[] options;
     private boolean[] selections;
 
     public Proposition(String name, String description, int maxNumSelections, String[] options) {
@@ -44,5 +44,16 @@ public class Proposition {
     }
     public void setSelections(boolean[] selections) {
         this.selections = selections;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(name).append("\n");
+        sb.append(description).append("\n");
+        sb.append(maxNumSelections).append("\n");
+        for (int i = 0; i < options.length; i++) {
+            sb.append(options[i]).append("-------").append(selections[i]).append("\n");
+        }
+        return sb.toString();
     }
 }

@@ -19,6 +19,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import testSuite.Proposition;
+import javafx.scene.layout.Region;
 
 public class VoteScreen {
 
@@ -33,6 +34,8 @@ public class VoteScreen {
     public Scene draw() {
         if ("Welcome".equals(proposition.getName())) {
             return createWelcomeScreen();
+        } else if ("Admin".equals((proposition.getName()))) {
+            return createAdminScreen();
         } else {
             return createVotingScreen();
         }
@@ -53,6 +56,10 @@ public class VoteScreen {
         electionLabel.setFont(Font.font("Georgia", FontWeight.EXTRA_BOLD, 36));
         electionLabel.setStyle("-fx-text-fill: #2c3e50;");
         electionLabel.setTextAlignment(TextAlignment.CENTER);
+
+        Button adminButton = new Button("Admin Mode");
+        styleAdminButton(adminButton);
+        adminButton.setOnAction(e -> controller.navigateAdmin());
 
         Button startButton = new Button("BEGIN ➔");
         startButton.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
@@ -78,13 +85,15 @@ public class VoteScreen {
                         "-fx-background-radius: 15; " +
                         "-fx-padding: 10px;"
         ));
-        startButton.setOnAction(e -> controller.navigateNext());
+        startButton.setOnAction(e -> controller.navigateBegin());
 
         Stop[] stops = new Stop[] { new Stop(0, Color.web("#DCE2F2")), new Stop(1, Color.web("#F4D3D3")) };
         LinearGradient gradient = new LinearGradient(0, 0, 0, 1, true, null, stops);
 
-        VBox layout = new VBox(20, welcomeToLabel, yearLabel, electionLabel, startButton);
-        layout.setPadding(new Insets(50));
+        Region spacer = new Region();
+        spacer.setPrefHeight(80);
+        VBox layout = new VBox(20, adminButton, spacer, welcomeToLabel, yearLabel, electionLabel, startButton);
+        layout.setPadding(new Insets(0, 0, 140, 0));
         layout.setAlignment(Pos.CENTER);
         layout.setBackground(new Background(new BackgroundFill(gradient, CornerRadii.EMPTY, Insets.EMPTY)));
 
@@ -161,6 +170,9 @@ public class VoteScreen {
             optionsBox.getChildren().add(optionButton);
         }
 
+        Button adminButton = new Button("Admin Mode");
+        styleAdminButton(adminButton);
+        adminButton.setOnAction(e -> controller.navigateAdmin());
 
         Button backButton = new Button("Back");
         styleNavigationButton(backButton);
@@ -173,8 +185,40 @@ public class VoteScreen {
         HBox navigationBox = new HBox(30, backButton, nextButton);
         navigationBox.setAlignment(Pos.CENTER);
 
-        VBox mainLayout = new VBox(20, titleLabel, descriptionLabel, optionsBox, navigationBox);
-        mainLayout.setPadding(new Insets(30));
+        Region spacer = new Region();
+        spacer.setPrefHeight(30);
+
+        VBox mainLayout = new VBox(20, adminButton, spacer, titleLabel, descriptionLabel, optionsBox, navigationBox);
+        mainLayout.setPadding(new Insets(20));
+        mainLayout.setAlignment(Pos.CENTER);
+        mainLayout.setStyle("-fx-background-color: linear-gradient(to bottom, #e6ecf2, #cfd8e4); -fx-background-radius: 20;");
+
+        return new Scene(mainLayout, 400, 600);
+    }
+
+    private Scene createAdminScreen() {
+        Label adminLabel = new Label("Admin");
+        adminLabel.setFont(Font.font("Georgia", FontWeight.EXTRA_BOLD, 28));
+        adminLabel.setStyle("-fx-text-fill: black;");
+
+        Label descriptionLabel = new Label("Select 1 Option");
+        descriptionLabel.setFont(Font.font("Times New Roman", FontWeight.SEMI_BOLD, 20));
+        descriptionLabel.setStyle("-fx-text-fill: black;");
+
+        Button startButton = new Button("Start");
+        styleAdminNavigationButtons(startButton);
+        startButton.setOnAction(e -> controller.navigateStart());
+
+        Button pauseButton = new Button("Pause");
+        styleAdminNavigationButtons(pauseButton);
+        pauseButton.setOnAction(e -> controller.navigatePause());
+
+        Button stopButton = new Button("Stop");
+        styleAdminNavigationButtons(stopButton);
+        stopButton.setOnAction(e -> controller.navigateStop());
+
+        VBox mainLayout = new VBox(20, adminLabel, descriptionLabel, startButton, pauseButton, stopButton);
+        mainLayout.setPadding(new Insets(0,0,100,0));
         mainLayout.setAlignment(Pos.CENTER);
         mainLayout.setStyle("-fx-background-color: linear-gradient(to bottom, #e6ecf2, #cfd8e4); -fx-background-radius: 20;");
 
@@ -200,6 +244,59 @@ public class VoteScreen {
         ));
         button.setOnMouseExited(e -> button.setStyle(
                 "-fx-background-color: darkblue; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-border-radius: 10; " +
+                        "-fx-background-radius: 10; " +
+                        "-fx-padding: 10px;"
+        ));
+    }
+
+    private void styleAdminButton(Button button) {
+        button.setFont(Font.font("Georgia", FontWeight.BOLD, 16));
+        button.setMinWidth(120);
+        button.setStyle(
+                "-fx-background-color: lightgray; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-border-radius: 10; " +
+                        "-fx-background-radius: 10; " +
+                        "-fx-padding: 10px;"
+        );
+        button.setOnMouseEntered(e -> button.setStyle(
+                "-fx-background-color: gray; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-border-radius: 10; " +
+                        "-fx-background-radius: 10; " +
+                        "-fx-padding: 10px;"
+        ));
+        button.setOnMouseExited(e -> button.setStyle(
+                "-fx-background-color: lightgray; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-border-radius: 10; " +
+                        "-fx-background-radius: 10; " +
+                        "-fx-padding: 10px;"
+        ));
+    }
+
+    private void styleAdminNavigationButtons(Button button) {
+        button.setMinWidth(250);
+        button.setFont(Font.font("Times New Roman", FontWeight.BOLD, 18));
+        button.setStyle(
+                "-fx-background-color: lightgray; " +
+                        "-fx-text-fill: black; " +
+                        "-fx-border-color: darkgray; " +
+                        "-fx-border-radius: 10; " +
+                        "-fx-background-radius: 10; " +
+                        "-fx-padding: 10px;"
+        );
+        button.setOnMouseEntered(e -> button.setStyle(
+                "-fx-background-color: darkblue; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-border-radius: 10; " +
+                        "-fx-background-radius: 10; " +
+                        "-fx-padding: 10px;"
+        ));
+        button.setOnMouseExited(e -> button.setStyle(
+                "-fx-background-color: lightgray; " +
                         "-fx-text-fill: white; " +
                         "-fx-border-radius: 10; " +
                         "-fx-background-radius: 10; " +

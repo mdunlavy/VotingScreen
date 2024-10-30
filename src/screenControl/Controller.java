@@ -1,9 +1,13 @@
 package screenControl;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -15,9 +19,17 @@ public class Controller extends Application {
 
     private Stage primaryStage;
     private List<Proposition> propositions = new ArrayList<>();
-    private List<VoteScreen> voteScreens = new ArrayList<>();
-    private List<Proposition> submittedVotes = new ArrayList<>();
+    private final List<VoteScreen> voteScreens = new ArrayList<>();
+    private final List<Proposition> submittedVotes = new ArrayList<>();
     private int currentScreenIndex = 0;
+    private boolean unlockedForTheUser = false;
+    private boolean unlockedForTheDay = false;
+
+    private static Controller instance;
+
+    public Controller() {
+        instance = this; // Set the static instance when constructed
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -27,23 +39,20 @@ public class Controller extends Application {
     }
 
     private void setupVotingProcess() {
-        propositions.clear();
         voteScreens.clear();
 
         Proposition welcomeProposition = new Proposition("Welcome", null, 0, new String[0]);
-        propositions.add(welcomeProposition);
+        Proposition adminProposition = new Proposition("Admin", null, 0, new String[0]);
 
-        propositions.add(new Proposition("Proposition 1", "Description of Proposition 1", 1, new String[]{"Option A", "Option B", "Option C"}));
-        propositions.add(new Proposition("Proposition 2", "Description of Proposition 2", 1, new String[]{"Option D", "Option E"}));
-        propositions.add(new Proposition("Proposition 3", "Description of Proposition 3", 1, new String[]{"Option F", "Option G", "Option H", "Option I"}));
-
+        voteScreens.add(new VoteScreen(welcomeProposition, this));
+        voteScreens.add(new VoteScreen(adminProposition, this));
         for (Proposition proposition : propositions) {
             voteScreens.add(new VoteScreen(proposition, this));
         }
     }
 
-    public void showScreen(int index) {
-        if (index >= 0 && index < voteScreens.size()) {
+    private void showScreen(int index) {
+        if (index >= 0 && index <= voteScreens.size()) {
             currentScreenIndex = index;
             VoteScreen currentVoteScreen = voteScreens.get(index);
             Scene scene = currentVoteScreen.draw();
@@ -53,17 +62,135 @@ public class Controller extends Application {
         }
     }
 
-    public void navigateNext() {
-        if (currentScreenIndex < voteScreens.size() - 1) {
+    protected void navigateBegin() {
+        if (unlockedForTheDay && unlockedForTheUser && propositions.size() >= 2) {
+            currentScreenIndex = 2;
+            showScreen(currentScreenIndex);
+        }
+    }
+
+    protected void navigateNext() {
+        if (unlockedForTheDay && unlockedForTheUser && currentScreenIndex < voteScreens.size() - 1) {
             showScreen(currentScreenIndex + 1);
-        } else {
+        } else if (unlockedForTheDay && unlockedForTheUser && currentScreenIndex > 0){
             confirmSubmission();
         }
     }
 
-    public void navigateBack() {
-        if (currentScreenIndex > 0) {
+    protected void navigateBack() {
+        if (currentScreenIndex > 2) {
             showScreen(currentScreenIndex - 1);
+        }
+        else if (currentScreenIndex == 2) {
+            showScreen(0);
+        }
+    }
+
+    protected void navigateAdmin() {
+        adminAuthentication();
+    }
+
+    protected void navigateStart() {
+        adminInstructionConfirmation(1);
+    }
+
+    protected void navigatePause() {
+        adminInstructionConfirmation(2);
+    }
+
+    protected void navigateStop() {
+        adminInstructionConfirmation(3);
+    }
+
+    private void adminAuthentication() {
+
+        String validUsername = "adminTest";
+        String validPassword = "123456";
+        // create a new Stage (window) for the login pop-up
+        Stage loginStage = new Stage();
+        loginStage.initModality(Modality.APPLICATION_MODAL); // Blocks other windows until closed
+        loginStage.setTitle("Admin Login");
+
+        GridPane gridPane = new GridPane();
+        gridPane.setPadding(new Insets(10));
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setAlignment(Pos.CENTER);
+
+        Label usernameLabel = new Label("Username:");
+        TextField usernameField = new TextField();
+        Label passwordLabel = new Label("Password:");
+        PasswordField passwordField = new PasswordField();
+
+        Button submitButton = new Button("Submit");
+        Button cancelButton = new Button("Cancel");
+
+        submitButton.setOnAction(e -> {
+            String username = usernameField.getText();
+            String password = passwordField.getText();
+            System.out.println("Username: " + username + ", Password: " + password);
+
+            if (username.equals(validUsername) && password.equals(validPassword)) {
+                loginStage.close();
+                if (currentScreenIndex >= 0) {
+                    currentScreenIndex = 1;
+                    showScreen(currentScreenIndex);
+                }
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username or password.");
+            }
+        });
+
+        cancelButton.setOnAction(e -> loginStage.close());
+
+        HBox buttonBox = new HBox(10, submitButton, cancelButton);
+        buttonBox.setAlignment(Pos.BASELINE_RIGHT);
+
+        gridPane.add(usernameLabel, 0, 0);
+        gridPane.add(usernameField, 1, 0);
+        gridPane.add(passwordLabel, 0, 1);
+        gridPane.add(passwordField, 1, 1);
+        gridPane.add(buttonBox, 1, 2);
+
+        Scene loginScene = new Scene(gridPane, 300, 150);
+        loginStage.setScene(loginScene);
+
+        loginStage.showAndWait();
+    }
+
+    // method to show admin authentication fail messages
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.setWidth(300);
+        alert.showAndWait();
+    }
+
+    private void adminInstructionConfirmation(int instruction) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Admin Instruction");
+        alert.setHeaderText("Are you sure you want to execute the selected instruction?");
+        alert.getDialogPane().setStyle("-fx-font-size: 10px;");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            if (instruction == 1) { //start
+                this.unlockedForTheDay = true;
+                currentScreenIndex = 0;
+                showScreen(currentScreenIndex);
+            } else if (instruction == 2) { //pause
+                this.unlockedForTheDay = false;
+                //clear selections?
+                currentScreenIndex = 0;
+                showScreen(currentScreenIndex);
+            } else if (instruction == 3) { //stop
+                this.unlockedForTheDay = false;
+                //clear selections?
+                currentScreenIndex = 0;
+                showScreen(currentScreenIndex);
+            }
         }
     }
 
@@ -97,6 +224,38 @@ public class Controller extends Application {
 
             submittedVotes.add(copy);
         }
+
+        // Lock the voting process after saving the votes
+        this.unlockedForTheUser = false;
+    }
+
+    // Screen Controller API methods below
+
+    public static Controller getInstance() {
+        return instance;
+    }
+
+    // Getter to return the propositions array
+    public List<Proposition> getSubmittedVotes() {
+        return this.submittedVotes;
+    }
+
+    // Method to unlock the voting process
+    public void unlock() {
+        this.unlockedForTheUser = true;
+    }
+
+    // Method to unlock the voting process
+    public void lock() {
+        this.unlockedForTheUser = false;
+    }
+
+    public void setPropositions(List<Proposition> propositions) {
+        if (currentScreenIndex != 0) {
+            return;
+        }
+        this.propositions = propositions;
+        setupVotingProcess();
     }
 
     public static void main(String[] args) {
