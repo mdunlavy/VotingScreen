@@ -24,9 +24,9 @@ import javafx.scene.layout.Region;
 public class VoteScreen {
 
     private Proposition proposition;
-    private Controller controller;
+    private ScreenController controller;
 
-    public VoteScreen(Proposition proposition, Controller controller) {
+    public VoteScreen(Proposition proposition, ScreenController controller) {
         this.proposition = proposition;
         this.controller = controller;
     }

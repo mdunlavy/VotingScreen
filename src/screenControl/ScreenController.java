@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import testSuite.Proposition;
 
-public class Controller extends Application {
+public class ScreenController extends Application {
 
     private Stage primaryStage;
     private List<Proposition> propositions = new ArrayList<>();
@@ -25,9 +25,9 @@ public class Controller extends Application {
     private boolean unlockedForTheUser = false;
     private boolean unlockedForTheDay = false;
 
-    private static Controller instance;
+    private static ScreenController instance;
 
-    public Controller() {
+    public ScreenController() {
         instance = this; // Set the static instance when constructed
     }
 
@@ -229,11 +229,11 @@ public class Controller extends Application {
         this.unlockedForTheUser = false;
     }
 
-    // Screen Controller API methods below
-
-    public static Controller getInstance() {
+    public static ScreenController getInstance() {
         return instance;
     }
+
+    // Screen Controller API methods below
 
     // Getter to return the propositions array
     public List<Proposition> getSubmittedVotes() {
@@ -241,13 +241,23 @@ public class Controller extends Application {
     }
 
     // Method to unlock the voting process
-    public void unlock() {
+    public void unlockForTheUser() {
         this.unlockedForTheUser = true;
     }
 
     // Method to unlock the voting process
-    public void lock() {
+    public void lockForTheUser() {
         this.unlockedForTheUser = false;
+    }
+
+    // Method to unlock the voting process
+    public void unlockForTheDay() {
+        this.unlockedForTheDay = true;
+    }
+
+    // Method to unlock the voting process
+    public void lockForTheDay() {
+        this.unlockedForTheDay = false;
     }
 
     public void setPropositions(List<Proposition> propositions) {

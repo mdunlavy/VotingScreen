@@ -1,6 +1,6 @@
 package testSuite;
 
-import screenControl.Controller;
+import screenControl.ScreenController;
 
 import javafx.application.Application;
 
@@ -10,15 +10,15 @@ import java.util.Scanner;
 
 public class Test {
 
-    private static Controller scr;
+    private static ScreenController scr;
     private static Propositions propositions;
 
     public static void main(String[] args) {
         // Start the JavaFX application in a separate thread
-        new Thread(() -> Application.launch(Controller.class)).start();
+        new Thread(() -> Application.launch(ScreenController.class)).start();
 
         // Wait for the JavaFX application to initialize the Controller instance
-        while ((scr = Controller.getInstance()) == null) {
+        while ((scr = ScreenController.getInstance()) == null) {
             // Busy-wait until the Controller instance is available
         }
 
@@ -42,11 +42,11 @@ public class Test {
                     printSubmittedVotes();
                     break;
                 case "unlock":
-                    scr.unlock();
+                    scr.unlockForTheUser();
                     System.out.println("Controller unlocked!");
                     break;
                 case "lock":
-                    scr.lock();
+                    scr.lockForTheUser();
                     System.out.println("Controller locked!");
                     break;
                 // Even though this clears the ballot, it does this by passing an empty list of propositions
