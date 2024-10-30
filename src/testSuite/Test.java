@@ -41,14 +41,14 @@ public class Test {
                 case "status":
                     printSubmittedVotes();
                     break;
-//                case "unlock":
-//                    scr.unlock();
-//                    System.out.println("Controller unlocked!");
-//                    break;
-//                case "lock":
-//                    scr.lock();
-//                    System.out.println("Controller locked!");
-//                    break;
+                case "unlock":
+                    scr.unlock();
+                    System.out.println("Controller unlocked!");
+                    break;
+                case "lock":
+                    scr.lock();
+                    System.out.println("Controller locked!");
+                    break;
                 // Even though this clears the ballot, it does this by passing an empty list of propositions
                 // To test what happens when the list of propositions is changed
                 case "clear_ballot":
@@ -75,7 +75,6 @@ public class Test {
         for (Proposition p : propositions) {
             System.out.println(p.toString());  // Uses the existing toString() method for formatted output
         }
-        System.out.println("-----------");
     }
 }
 

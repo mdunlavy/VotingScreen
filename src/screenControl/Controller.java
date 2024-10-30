@@ -22,7 +22,8 @@ public class Controller extends Application {
     private final List<VoteScreen> voteScreens = new ArrayList<>();
     private final List<Proposition> submittedVotes = new ArrayList<>();
     private int currentScreenIndex = 0;
-    private boolean unlocked = false;
+    private boolean unlockedForTheUser = false;
+    private boolean unlockedForTheDay = false;
 
     private static Controller instance;
 
@@ -62,16 +63,16 @@ public class Controller extends Application {
     }
 
     protected void navigateBegin() {
-        if (unlocked && propositions.size() >= 2) {
+        if (unlockedForTheDay && unlockedForTheUser && propositions.size() >= 2) {
             currentScreenIndex = 2;
             showScreen(currentScreenIndex);
         }
     }
 
     protected void navigateNext() {
-        if (unlocked && currentScreenIndex < voteScreens.size() - 1) {
+        if (unlockedForTheDay && unlockedForTheUser && currentScreenIndex < voteScreens.size() - 1) {
             showScreen(currentScreenIndex + 1);
-        } else if (unlocked && currentScreenIndex > 0){
+        } else if (unlockedForTheDay && unlockedForTheUser && currentScreenIndex > 0){
             confirmSubmission();
         }
     }
@@ -176,16 +177,16 @@ public class Controller extends Application {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             if (instruction == 1) { //start
-                this.unlocked = true;
+                this.unlockedForTheDay = true;
                 currentScreenIndex = 0;
                 showScreen(currentScreenIndex);
             } else if (instruction == 2) { //pause
-                this.unlocked = false;
+                this.unlockedForTheDay = false;
                 //clear selections?
                 currentScreenIndex = 0;
                 showScreen(currentScreenIndex);
             } else if (instruction == 3) { //stop
-                this.unlocked = false;
+                this.unlockedForTheDay = false;
                 //clear selections?
                 currentScreenIndex = 0;
                 showScreen(currentScreenIndex);
@@ -225,7 +226,7 @@ public class Controller extends Application {
         }
 
         // Lock the voting process after saving the votes
-        this.unlocked = false;
+        this.unlockedForTheUser = false;
     }
 
     // Screen Controller API methods below
@@ -241,12 +242,12 @@ public class Controller extends Application {
 
     // Method to unlock the voting process
     public void unlock() {
-        this.unlocked = true;
+        this.unlockedForTheUser = true;
     }
 
     // Method to unlock the voting process
     public void lock() {
-        this.unlocked = false;
+        this.unlockedForTheUser = false;
     }
 
     public void setPropositions(List<Proposition> propositions) {
