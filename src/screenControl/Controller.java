@@ -18,6 +18,7 @@ public class Controller extends Application {
     private List<VoteScreen> voteScreens = new ArrayList<>();
     private List<Proposition> submittedVotes = new ArrayList<>();
     private int currentScreenIndex = 0;
+    private boolean unlocked = false;
 
     private static Controller instance;
 
@@ -37,22 +38,17 @@ public class Controller extends Application {
     }
 
     private void setupVotingProcess() {
-        propositions.clear();
         voteScreens.clear();
 
         Proposition welcomeProposition = new Proposition("Welcome", null, 0, new String[0]);
-        propositions.add(welcomeProposition);
 
-        propositions.add(new Proposition("Proposition 1", "Description of Proposition 1", 1, new String[]{"Option A", "Option B", "Option C"}));
-        propositions.add(new Proposition("Proposition 2", "Description of Proposition 2", 1, new String[]{"Option D", "Option E"}));
-        propositions.add(new Proposition("Proposition 3", "Description of Proposition 3", 1, new String[]{"Option F", "Option G", "Option H", "Option I"}));
-
+        voteScreens.add(new VoteScreen(welcomeProposition, this));
         for (Proposition proposition : propositions) {
             voteScreens.add(new VoteScreen(proposition, this));
         }
     }
 
-    public void showScreen(int index) {
+    private void showScreen(int index) {
         if (index >= 0 && index < voteScreens.size()) {
             currentScreenIndex = index;
             VoteScreen currentVoteScreen = voteScreens.get(index);
@@ -63,15 +59,15 @@ public class Controller extends Application {
         }
     }
 
-    public void navigateNext() {
-        if (currentScreenIndex < voteScreens.size() - 1) {
+    protected void navigateNext() {
+        if (unlocked && currentScreenIndex < voteScreens.size() - 1) {
             showScreen(currentScreenIndex + 1);
-        } else {
+        } else if (unlocked && currentScreenIndex > 0){
             confirmSubmission();
         }
     }
 
-    public void navigateBack() {
+    protected void navigateBack() {
         if (currentScreenIndex > 0) {
             showScreen(currentScreenIndex - 1);
         }
@@ -107,11 +103,33 @@ public class Controller extends Application {
 
             submittedVotes.add(copy);
         }
+
+        // Lock the voting process after saving the votes
+        this.unlocked = false;
     }
 
     // Getter to return the propositions array
-    public List<Proposition> getPropositions() {
-        return propositions;
+    public List<Proposition> getSubmittedVotes() {
+        return this.submittedVotes;
+    }
+
+    // Method to unlock the voting process
+    public void unlock() {
+        this.unlocked = true;
+    }
+
+    // Method to unlock the voting process
+    public void lock() {
+        this.unlocked = false;
+    }
+
+    public void setPropositions(List<Proposition> propositions) {
+        // TODO maybe find better way to handle this
+        if (propositions.isEmpty() && currentScreenIndex != 0) {
+            return;
+        }
+        this.propositions = propositions;
+        setupVotingProcess();
     }
 
     public static void main(String[] args) {
