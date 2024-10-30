@@ -251,7 +251,7 @@ public class Controller extends Application {
     }
 
     public void setPropositions(List<Proposition> propositions) {
-        if (propositions.isEmpty() && currentScreenIndex != 0) {
+        if (currentScreenIndex != 0) {
             return;
         }
         this.propositions = propositions;
