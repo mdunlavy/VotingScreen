@@ -1,3 +1,4 @@
+package screenControl;
 public class Controller {
     //take in proposition, parse input, pass input to display to create screens, then launch args to display
     //this should mainly serve as a logical controller for the screens, it needs to store user input (votes)

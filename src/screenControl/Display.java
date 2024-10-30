@@ -1,3 +1,4 @@
+package screenControl;
 public class Display {
     //the display will create all the display objects (welcome screen, vote screen, confirm votes popup etc) and will be 
     //mainly just a holder for all GUI objects with methods that the controller will call based on current state information that 

@@ -1,3 +1,4 @@
+package screenControl;
 import javafx.scene.Scene;
 
 public class VoteScreen {
