@@ -7,11 +7,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-
+import javafx.scene.text.TextAlignment;
 import testSuite.Proposition;
 
 public class VoteScreen {
@@ -33,26 +39,54 @@ public class VoteScreen {
     }
 
     private Scene createWelcomeScreen() {
-        Label welcomeLabel = new Label("Welcome to the Voting System");
-        welcomeLabel.setFont(Font.font("Georgia", FontWeight.EXTRA_BOLD, 28));
-        welcomeLabel.setStyle("-fx-text-fill: black;");
+        Label welcomeToLabel = new Label("Welcome to");
+        welcomeToLabel.setFont(Font.font("Georgia", FontWeight.EXTRA_BOLD, 36));
+        welcomeToLabel.setStyle("-fx-text-fill: #2c3e50;");
+        welcomeToLabel.setTextAlignment(TextAlignment.CENTER);
 
-        Button startButton = new Button("Start Voting");
-        startButton.setFont(Font.font("Georgia", FontWeight.BOLD, 16));
-        startButton.setMinWidth(150);
+        Label yearLabel = new Label("2024");
+        yearLabel.setFont(Font.font("Georgia", FontWeight.EXTRA_BOLD, 48));
+        yearLabel.setStyle("-fx-text-fill: #2c3e50;");
+        yearLabel.setTextAlignment(TextAlignment.CENTER);
+
+        Label electionLabel = new Label("Election!");
+        electionLabel.setFont(Font.font("Georgia", FontWeight.EXTRA_BOLD, 36));
+        electionLabel.setStyle("-fx-text-fill: #2c3e50;");
+        electionLabel.setTextAlignment(TextAlignment.CENTER);
+
+        Button startButton = new Button("BEGIN ➔");
+        startButton.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        startButton.setMinWidth(200);
         startButton.setStyle(
-                "-fx-background-color: darkblue; " +
+                "-fx-background-color: #4a90e2; " +
                         "-fx-text-fill: white; " +
-                        "-fx-border-radius: 10; " +
-                        "-fx-background-radius: 10; " +
+                        "-fx-border-radius: 15; " +
+                        "-fx-background-radius: 15; " +
                         "-fx-padding: 10px;"
         );
+        startButton.setOnMouseEntered(e -> startButton.setStyle(
+                "-fx-background-color: #357ABD; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-border-radius: 15; " +
+                        "-fx-background-radius: 15; " +
+                        "-fx-padding: 10px;"
+        ));
+        startButton.setOnMouseExited(e -> startButton.setStyle(
+                "-fx-background-color: #4a90e2; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-border-radius: 15; " +
+                        "-fx-background-radius: 15; " +
+                        "-fx-padding: 10px;"
+        ));
         startButton.setOnAction(e -> controller.navigateNext());
 
-        VBox layout = new VBox(20, welcomeLabel, startButton);
-        layout.setPadding(new Insets(30));
+        Stop[] stops = new Stop[] { new Stop(0, Color.web("#DCE2F2")), new Stop(1, Color.web("#F4D3D3")) };
+        LinearGradient gradient = new LinearGradient(0, 0, 0, 1, true, null, stops);
+
+        VBox layout = new VBox(20, welcomeToLabel, yearLabel, electionLabel, startButton);
+        layout.setPadding(new Insets(50));
         layout.setAlignment(Pos.CENTER);
-        layout.setStyle("-fx-background-color: linear-gradient(to bottom, #e6ecf2, #cfd8e4); -fx-background-radius: 20;");
+        layout.setBackground(new Background(new BackgroundFill(gradient, CornerRadii.EMPTY, Insets.EMPTY)));
 
         return new Scene(layout, 400, 600);
     }
@@ -87,6 +121,15 @@ public class VoteScreen {
             optionButton.setToggleGroup(toggleGroup);
             final int index = i;
 
+            // Pre-select any previously saved selection
+            if (i < proposition.getSelections().length && proposition.getSelections()[i]) {
+                optionButton.setSelected(true);
+                optionButton.setStyle(
+                        "-fx-background-color: darkblue; -fx-text-fill: white; -fx-border-radius: 10; " +
+                                "-fx-background-radius: 10; -fx-padding: 10px; -fx-font-size: 18px; -fx-font-family: 'Times New Roman'; -fx-font-weight: bold; -fx-border-color: darkgray;"
+                );
+            }
+
             if (optionText.isEmpty()) {
                 optionButton.setDisable(true);
                 optionButton.setStyle(
@@ -107,8 +150,8 @@ public class VoteScreen {
                             ToggleButton button = (ToggleButton) node;
                             button.setStyle(
                                     button.isSelected()
-                                            ? "-fx-background-color: darkblue; -fx-text-fill: white; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 10px; -fx-font-size: 18px; -fx-font-family: 'Times New Roman'; -fx-border-color: darkgray;"
-                                            : "-fx-background-color: lightgray; -fx-text-fill: black; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 10px; -fx-font-size: 18px; -fx-font-family: 'Times New Roman'; -fx-border-color: darkgray;"
+                                            ? "-fx-background-color: darkblue; -fx-text-fill: white; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 10px; -fx-font-size: 18px; -fx-font-family: 'Times New Roman'; -fx-font-weight: bold; -fx-border-color: darkgray;"
+                                            : "-fx-background-color: lightgray; -fx-text-fill: black; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 10px; -fx-font-size: 18px; -fx-font-family: 'Times New Roman'; -fx-font-weight: bold; -fx-border-color: darkgray;"
                             );
                         }
                     });
@@ -117,6 +160,7 @@ public class VoteScreen {
 
             optionsBox.getChildren().add(optionButton);
         }
+
 
         Button backButton = new Button("Back");
         styleNavigationButton(backButton);
