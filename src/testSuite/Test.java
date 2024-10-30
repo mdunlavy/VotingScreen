@@ -31,24 +31,24 @@ public class Test {
 
     private static void startCommandLineInput() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("CLI ready. Type 'status' to print submitted votes or 'unlock' to unlock the controller.");
+        System.out.println("CLI ready. Type 'status' to print submitted votes or 'set_ballot' to set the ballot.");
 
         while (true) {
             System.out.print("> ");
             String command = scanner.nextLine().trim().toLowerCase();
 
             switch (command) {
-                case "get_submission":
+                case "status":
                     printSubmittedVotes();
                     break;
-                case "unlock":
-                    scr.unlock();
-                    System.out.println("Controller unlocked!");
-                    break;
-                case "lock":
-                    scr.lock();
-                    System.out.println("Controller locked!");
-                    break;
+//                case "unlock":
+//                    scr.unlock();
+//                    System.out.println("Controller unlocked!");
+//                    break;
+//                case "lock":
+//                    scr.lock();
+//                    System.out.println("Controller locked!");
+//                    break;
                 // Even though this clears the ballot, it does this by passing an empty list of propositions
                 // To test what happens when the list of propositions is changed
                 case "clear_ballot":
@@ -64,7 +64,7 @@ public class Test {
                     scanner.close();
                     return;
                 default:
-                    System.out.println("Unknown command. Please type 'status', 'unlock', or 'exit'.");
+                    System.out.println("Unknown command. Please type 'status', 'set_ballot', 'clear_ballot', or 'exit'.");
             }
         }
     }
