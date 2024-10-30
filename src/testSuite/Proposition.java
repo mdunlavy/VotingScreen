@@ -45,4 +45,15 @@ public class Proposition {
     public void setSelections(boolean[] selections) {
         this.selections = selections;
     }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(name).append("\n");
+        sb.append(description).append("\n");
+        sb.append(maxNumSelections).append("\n");
+        for (int i = 0; i < options.length; i++) {
+            sb.append(options[i]).append("-------").append(selections[i]).append("\n");
+        }
+        return sb.toString();
+    }
 }

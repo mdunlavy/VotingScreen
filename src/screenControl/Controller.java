@@ -19,6 +19,16 @@ public class Controller extends Application {
     private List<Proposition> submittedVotes = new ArrayList<>();
     private int currentScreenIndex = 0;
 
+    private static Controller instance;
+
+    public Controller() {
+        instance = this; // Set the static instance when constructed
+    }
+
+    public static Controller getInstance() {
+        return instance;
+    }
+
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -97,6 +107,11 @@ public class Controller extends Application {
 
             submittedVotes.add(copy);
         }
+    }
+
+    // Getter to return the propositions array
+    public List<Proposition> getPropositions() {
+        return propositions;
     }
 
     public static void main(String[] args) {

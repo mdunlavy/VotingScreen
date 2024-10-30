@@ -1,7 +1,10 @@
 package testSuite;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Propositions {
-    private Proposition[] listOfPropositions;
+    private List<Proposition> listOfPropositions = new ArrayList<>();
 
     public Propositions() {
         String[] options01 = new String[]{"Kamala", "Trump"};
@@ -18,9 +21,15 @@ public class Propositions {
 
         String[] options05 = new String[]{"Bulbasaur", "Squirtle", "Charmander"};
         Proposition proposition05 = new Proposition("Starter Pokemon", "This will be your first pokemon for your adventure.", 3, options05);
+
+        listOfPropositions.add(proposition01);
+        listOfPropositions.add(proposition02);
+        listOfPropositions.add(proposition03);
+        listOfPropositions.add(proposition04);
+        listOfPropositions.add(proposition05);
     }
 
-    public Proposition[] getListOfPropositions() {
+    public List<Proposition> getListOfPropositions() {
         return this.listOfPropositions;
     }
 }
