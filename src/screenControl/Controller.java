@@ -163,6 +163,7 @@ public class Controller extends Application {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+        alert.setWidth(300);
         alert.showAndWait();
     }
 
