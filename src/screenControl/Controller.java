@@ -15,8 +15,8 @@ public class Controller extends Application {
 
     private Stage primaryStage;
     private List<Proposition> propositions = new ArrayList<>();
-    private List<VoteScreen> voteScreens = new ArrayList<>();
-    private List<Proposition> submittedVotes = new ArrayList<>();
+    private final List<VoteScreen> voteScreens = new ArrayList<>();
+    private final List<Proposition> submittedVotes = new ArrayList<>();
     private int currentScreenIndex = 0;
     private boolean unlocked = false;
 
@@ -24,10 +24,6 @@ public class Controller extends Application {
 
     public Controller() {
         instance = this; // Set the static instance when constructed
-    }
-
-    public static Controller getInstance() {
-        return instance;
     }
 
     @Override
@@ -106,6 +102,12 @@ public class Controller extends Application {
 
         // Lock the voting process after saving the votes
         this.unlocked = false;
+    }
+
+    // Screen Controller API methods below
+
+    public static Controller getInstance() {
+        return instance;
     }
 
     // Getter to return the propositions array

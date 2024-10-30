@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Propositions {
-    private List<Proposition> listOfPropositions = new ArrayList<>();
+    private final List<Proposition> listOfPropositions = new ArrayList<>();
 
     public Propositions() {
         String[] options01 = new String[]{"Kamala", "Trump"};
