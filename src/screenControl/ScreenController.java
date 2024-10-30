@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import testSuite.Proposition;
 
-public class Controller extends Application {
+public class ScreenController extends Application {
 
     private Stage primaryStage;
     private List<Proposition> propositions = new ArrayList<>();
@@ -25,9 +25,9 @@ public class Controller extends Application {
     private boolean unlockedForTheUser = false;
     private boolean unlockedForTheDay = false;
 
-    private static Controller instance;
+    private static ScreenController instance;
 
-    public Controller() {
+    public ScreenController() {
         instance = this; // Set the static instance when constructed
     }
 
@@ -229,7 +229,7 @@ public class Controller extends Application {
         this.unlockedForTheUser = false;
     }
 
-    public static Controller getInstance() {
+    public static ScreenController getInstance() {
         return instance;
     }
 
