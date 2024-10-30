@@ -42,11 +42,11 @@ public class Test {
                     printSubmittedVotes();
                     break;
                 case "unlock":
-                    scr.unlock();
+                    scr.unlockForTheUser();
                     System.out.println("Controller unlocked!");
                     break;
                 case "lock":
-                    scr.lock();
+                    scr.lockForTheUser();
                     System.out.println("Controller locked!");
                     break;
                 // Even though this clears the ballot, it does this by passing an empty list of propositions
