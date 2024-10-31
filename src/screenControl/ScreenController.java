@@ -1,6 +1,7 @@
 package screenControl;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -22,6 +23,7 @@ public class ScreenController extends Application {
     private final List<VoteScreen> voteScreens = new ArrayList<>();
     private final List<Proposition> submittedVotes = new ArrayList<>();
     private int currentScreenIndex = 0;
+    private boolean isOn = false;
     private boolean unlockedForTheUser = false;
     private boolean unlockedForTheDay = false;
 
@@ -52,12 +54,19 @@ public class ScreenController extends Application {
     }
 
     private void showScreen(int index) {
-        if (index >= 0 && index <= voteScreens.size()) {
+        if (index >= 0 && index <= voteScreens.size() && isOn) {
             currentScreenIndex = index;
             VoteScreen currentVoteScreen = voteScreens.get(index);
             Scene scene = currentVoteScreen.draw();
             primaryStage.setScene(scene);
             primaryStage.setTitle("Voting System - Screen " + (index + 1));
+            primaryStage.show();
+        } else if (!isOn) {
+            currentScreenIndex = index;
+            VoteScreen currentVoteScreen = voteScreens.get(index);
+            Scene scene = currentVoteScreen.drawOffScreen();
+            primaryStage.setScene(scene);
+            primaryStage.setTitle("Voting System");
             primaryStage.show();
         }
     }
@@ -203,6 +212,10 @@ public class ScreenController extends Application {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             saveSubmittedVotes();
+            for (Proposition proposition: propositions) {
+                int length = proposition.getSelections().length;
+                proposition.setSelections(new boolean[length]);
+            }
             setupVotingProcess();
             showScreen(0);
         }
@@ -233,39 +246,93 @@ public class ScreenController extends Application {
         return instance;
     }
 
-    // Screen Controller API methods below
+    // Screen Controller API methods below\
 
-    // Getter to return the propositions array
-    public List<Proposition> getSubmittedVotes() {
-        return this.submittedVotes;
-    }
-
-    // Method to unlock the voting process
-    public void unlockForUser() {
-        this.unlockedForTheUser = true;
-    }
-
-    // Method to unlock the voting process
-    public void lockForUser() {
-        this.unlockedForTheUser = false;
-    }
-
-    // Method to unlock the voting process
-    public void unlockVotingSession() {
-        this.unlockedForTheDay = true;
-    }
-
-    // Method to unlock the voting process
-    public void lockVotingSession() {
-        this.unlockedForTheDay = false;
-    }
-
-    public void setPropositions(List<Proposition> propositions) {
-        if (currentScreenIndex != 0) {
-            return;
-        }
-        this.propositions = propositions;
+    /**
+     * Method to turn the screen on, and start on the welcome screen
+     */
+    public void turnOn() {
+        this.isOn = true;
         setupVotingProcess();
+        Platform.runLater(() -> instance.showScreen(0));
+    }
+
+    /**
+     * Method to turn the screen off, when screen is off, the submitted votes are not cleared from memory
+     */
+    public void turnOff() {
+        this.isOn = false;
+        setupVotingProcess();
+        Platform.runLater(() -> instance.showScreen(0));
+    }
+
+    /**
+     * Method to retrieve the submitted votes from memory, only retrievable when screen is on
+     * and will delete submitted votes from screen memory
+     * @return List<Proposition>
+     */
+    public List<Proposition> getSubmittedVotes() {
+        if (isOn) {
+            List<Proposition> tempSubmittedVotes = new ArrayList<>(this.submittedVotes);
+            this.submittedVotes.clear();
+            return tempSubmittedVotes;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Unlock the session for the user, one of two voter flags
+     */
+    public void unlockForUser() {
+        if (isOn) {
+            this.unlockedForTheUser = true;
+            setupVotingProcess();
+            Platform.runLater(() -> instance.showScreen(0));
+        }
+    }
+
+    /**
+     * Lock the session for the user, one of two voter flags
+     */
+    public void lockForUser() {
+        if (isOn) {
+            this.unlockedForTheUser = false;
+            Platform.runLater(() -> instance.showScreen(0));
+        }
+    }
+
+    /**
+     * Unlock the session for the voting session, one of two voter flags
+     */
+    public void unlockVotingSession() {
+        if (isOn) {
+            this.unlockedForTheDay = true;
+            setupVotingProcess();
+            Platform.runLater(() -> instance.showScreen(0));
+        }
+    }
+
+    /**
+     * Lock the session for the voting session, one of two voter flags
+     */
+    public void lockVotingSession() {
+        if (isOn) {
+            this.unlockedForTheDay = false;
+            Platform.runLater(() -> instance.showScreen(0));
+        }
+    }
+
+    /**
+     * This will set the propositions from which the user will be voted on
+     * @param propositions List<Proposition>
+     */
+    public void setPropositions(List<Proposition> propositions) {
+        if (this.isOn) {
+            this.propositions = new ArrayList<>(propositions);
+            setupVotingProcess();
+            Platform.runLater(() -> instance.showScreen(0));
+        }
     }
 
     public static void main(String[] args) {

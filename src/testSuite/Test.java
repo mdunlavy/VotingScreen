@@ -39,8 +39,20 @@ public class Test {
             String command = scanner.nextLine().trim().toLowerCase();
 
             switch (command) {
+                case "turn on":
+                    scr.turnOn();
+                    System.out.println("Screen turned on");
+                    break;
+                case "turn off":
+                    scr.turnOff();
+                    System.out.println("Screen turned off");
+                    break;
                 case "status":
-                    printSubmittedVotes();
+                    List<Proposition> submitted_propositions = scr.getSubmittedVotes();
+                    System.out.println("Current state of propositions:");
+                    for (Proposition p : submitted_propositions) {
+                        System.out.println(p.toString());  // Uses the existing toString() method for formatted output
+                    }
                     break;
                 case "unlock session":
                     scr.unlockVotingSession();
@@ -73,14 +85,6 @@ public class Test {
                 default:
                     System.out.println("Unknown command. Please type 'status', 'set_ballot', 'clear_ballot', 'unlock, 'lock, or 'exit'.");
             }
-        }
-    }
-
-    private static void printSubmittedVotes() {
-        List<Proposition> propositions = scr.getSubmittedVotes();
-        System.out.println("Current state of propositions:");
-        for (Proposition p : propositions) {
-            System.out.println(p.toString());  // Uses the existing toString() method for formatted output
         }
     }
 }
