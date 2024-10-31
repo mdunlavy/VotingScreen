@@ -58,6 +58,7 @@ public class ScreenController extends Application {
             currentScreenIndex = index;
             VoteScreen currentVoteScreen = voteScreens.get(index);
             Scene scene = currentVoteScreen.draw();
+            scene.getStylesheets().add(getClass().getResource("/resources/styles/styles.css").toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.setTitle("Voting System - Screen " + (index + 1));
             primaryStage.show();

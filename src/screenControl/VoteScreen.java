@@ -20,6 +20,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import testSuite.Proposition;
 import javafx.scene.layout.Region;
+import javafx.scene.control.Hyperlink;
 
 public class VoteScreen {
 
@@ -49,62 +50,132 @@ public class VoteScreen {
     }
 
     private Scene createWelcomeScreen() {
-        Label welcomeToLabel = new Label("Welcome to");
-        welcomeToLabel.setFont(Font.font("Georgia", FontWeight.EXTRA_BOLD, 36));
-        welcomeToLabel.setStyle("-fx-text-fill: #2c3e50;");
-        welcomeToLabel.setTextAlignment(TextAlignment.CENTER);
-
-        Label yearLabel = new Label("2024");
-        yearLabel.setFont(Font.font("Georgia", FontWeight.EXTRA_BOLD, 48));
-        yearLabel.setStyle("-fx-text-fill: #2c3e50;");
-        yearLabel.setTextAlignment(TextAlignment.CENTER);
-
-        Label electionLabel = new Label("Election!");
-        electionLabel.setFont(Font.font("Georgia", FontWeight.EXTRA_BOLD, 36));
-        electionLabel.setStyle("-fx-text-fill: #2c3e50;");
-        electionLabel.setTextAlignment(TextAlignment.CENTER);
-
-        Button adminButton = new Button("Admin Mode");
-        styleAdminButton(adminButton);
-        adminButton.setOnAction(e -> controller.navigateAdmin());
-
-        Button startButton = new Button("BEGIN ➔");
-        startButton.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-        startButton.setMinWidth(200);
-        startButton.setStyle(
-                "-fx-background-color: #4a90e2; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-border-radius: 15; " +
-                        "-fx-background-radius: 15; " +
-                        "-fx-padding: 10px;"
-        );
-        startButton.setOnMouseEntered(e -> startButton.setStyle(
-                "-fx-background-color: #357ABD; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-border-radius: 15; " +
-                        "-fx-background-radius: 15; " +
-                        "-fx-padding: 10px;"
-        ));
-        startButton.setOnMouseExited(e -> startButton.setStyle(
-                "-fx-background-color: #4a90e2; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-border-radius: 15; " +
-                        "-fx-background-radius: 15; " +
-                        "-fx-padding: 10px;"
-        ));
-        startButton.setOnAction(e -> controller.navigateBegin());
-
-        Stop[] stops = new Stop[] { new Stop(0, Color.web("#DCE2F2")), new Stop(1, Color.web("#F4D3D3")) };
+        // Main container with modern gradient background
+        VBox layout = new VBox(25);
+        Stop[] stops = new Stop[] { 
+            new Stop(0, Color.web("#FFFFFF")),
+            new Stop(1, Color.web("#F5F7FA"))
+        };
         LinearGradient gradient = new LinearGradient(0, 0, 0, 1, true, null, stops);
-
-        Region spacer = new Region();
-        spacer.setPrefHeight(80);
-        VBox layout = new VBox(20, adminButton, spacer, welcomeToLabel, yearLabel, electionLabel, startButton);
-        layout.setPadding(new Insets(0, 0, 140, 0));
-        layout.setAlignment(Pos.CENTER);
         layout.setBackground(new Background(new BackgroundFill(gradient, CornerRadii.EMPTY, Insets.EMPTY)));
-
+        
+        // Main title section
+        VBox titleBox = new VBox(8);
+        titleBox.setAlignment(Pos.CENTER);
+        
+        Label secureVotingLabel = new Label("Secure Voting");
+        secureVotingLabel.setFont(Font.font("SF Pro Display", FontWeight.BOLD, 42));
+        secureVotingLabel.setStyle("-fx-text-fill: #1A365D;"); // Deep blue for trust
+        
+        Label systemLabel = new Label("SYSTEM");
+        systemLabel.setFont(Font.font("SF Pro Display", FontWeight.LIGHT, 38));
+        systemLabel.setStyle("-fx-text-fill: #2D3748;"); // Slightly lighter
+        
+        // Subtitle with election year
+        Label yearLabel = new Label("2024 Election");
+        yearLabel.setFont(Font.font("SF Pro Display", FontWeight.MEDIUM, 24));
+        yearLabel.setStyle("-fx-text-fill: #4A5568; -fx-padding: 0 0 20 0;");
+        
+        // Trust indicators
+        HBox trustIndicators = new HBox(40);
+        trustIndicators.setAlignment(Pos.CENTER);
+        trustIndicators.setPadding(new Insets(30, 0, 30, 0));
+        
+        VBox[] indicators = new VBox[3];
+        String[][] indicatorContent = {
+            {MaterialIcons.LOCK, "Encrypted", "End-to-end encryption"},
+            {MaterialIcons.VERIFY, "Verified", "Multiple verification steps"},
+            {MaterialIcons.LIGHTNING, "Real-time", "Instant vote confirmation"}
+        };
+        
+        for (int i = 0; i < 3; i++) {
+            indicators[i] = createTrustIndicator(
+                indicatorContent[i][0],
+                indicatorContent[i][1],
+                indicatorContent[i][2]
+            );
+            trustIndicators.getChildren().add(indicators[i]);
+        }
+        
+        // Begin buttons
+        Button beginButton = createBeginButton();
+        
+        // Admin access subtle link
+        Hyperlink adminLink = new Hyperlink("Admin Access");
+        adminLink.setStyle("-fx-text-fill: #718096; -fx-border-color: transparent;");
+        adminLink.setOnAction(e -> controller.navigateAdmin());
+        adminLink.setFont(Font.font("SF Pro Display", FontWeight.MEDIUM, 14));
+        
+        // Footer text
+        Label footerLabel = new Label("Certified Electronic Voting System");
+        footerLabel.setStyle("-fx-text-fill: #718096; -fx-font-size: 12px;");
+        
+        // Layout assembly
+        titleBox.getChildren().addAll(secureVotingLabel, systemLabel);
+        layout.getChildren().addAll(
+            titleBox,
+            yearLabel,
+            trustIndicators,
+            beginButton,
+            new Region() {{ setPrefHeight(20); }},
+            adminLink,
+            footerLabel
+        );
+        
+        layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(40, 20, 40, 20));
+        
         return new Scene(layout, 400, 600);
+    }
+
+    private VBox createTrustIndicator(String iconName, String title, String description) {
+        VBox indicator = new VBox(5);
+        indicator.setAlignment(Pos.CENTER);
+        
+        // Update the icon label to use material-icons class
+        Label iconLabel = new Label(iconName);
+        iconLabel.getStyleClass().add("material-icons");
+        iconLabel.setStyle("-fx-font-size: 24px;");
+        
+        Label titleLabel = new Label(title);
+        titleLabel.setFont(Font.font("SF Pro Display", FontWeight.BOLD, 14));
+        titleLabel.setStyle("-fx-text-fill: #2D3748;");
+        
+        Label descLabel = new Label(description);
+        descLabel.setFont(Font.font("SF Pro Display", FontWeight.NORMAL, 12));
+        descLabel.setStyle("-fx-text-fill: #718096; -fx-wrap-text: true;");
+        descLabel.setTextAlignment(TextAlignment.CENTER);
+        descLabel.setMaxWidth(120);
+        
+        indicator.getChildren().addAll(iconLabel, titleLabel, descLabel);
+        return indicator;
+    }
+
+    private Button createBeginButton() {
+        Button beginButton = new Button("Begin Voting");
+        beginButton.setFont(Font.font("SF Pro Display", FontWeight.BOLD, 16));
+        
+        // button styling
+        String buttonStyle = """
+            -fx-background-color: #2B6CB0;
+            -fx-text-fill: white;
+            -fx-padding: 15 50;
+            -fx-background-radius: 8;
+            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 4);
+            -fx-cursor: hand;
+        """;
+        
+        String hoverStyle = """
+            -fx-background-color: #2C5282;
+            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 0, 4);
+        """;
+        
+        beginButton.setStyle(buttonStyle);
+        beginButton.setOnMouseEntered(e -> beginButton.setStyle(buttonStyle + hoverStyle));
+        beginButton.setOnMouseExited(e -> beginButton.setStyle(buttonStyle));
+        beginButton.setOnAction(e -> controller.navigateBegin());
+        
+        return beginButton;
     }
 
     private Scene createVotingScreen() {

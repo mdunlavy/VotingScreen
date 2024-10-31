@@ -7,6 +7,8 @@ import javafx.application.Application;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class Test {
 
@@ -14,6 +16,9 @@ public class Test {
     private static Propositions propositions;
 
     public static void main(String[] args) {
+        // Add this line to suppress the Material Icons font loading messages
+        Logger.getLogger("com.sun.javafx.css.StyleManager").setLevel(Level.WARNING);
+
         // Start the JavaFX application in a separate thread
         new Thread(() -> Application.launch(ScreenController.class)).start();
 
@@ -90,7 +95,15 @@ public class Test {
                     scanner.close();
                     return;
                 default:
-                    System.out.println("Unknown command. Please type 'status', 'set_ballot', 'clear_ballot', 'unlock, 'lock, or 'exit'.");
+                    System.out.println("Unknown Command, Please Enter:");
+                    System.out.println("  'turn on'        - to turn on the screen");
+                    System.out.println("  'turn off'       - to to turn off the screen");
+                    System.out.println("  'status'         - to print submitted votes");
+                    System.out.println("  'set ballot'     - to set the ballot");
+                    System.out.println("  'clear ballot'   - to clear the ballot");
+                    System.out.println("  'unlock user'    - to unlock current user");
+                    System.out.println("  'lock user'      - to lock current user");
+                    System.out.println("  'unlock session' - to unlock the session");
             }
         }
     }

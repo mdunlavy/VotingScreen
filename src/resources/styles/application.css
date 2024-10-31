@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Material Icons';
+    src: url('/fonts/MaterialIcons-Regular.ttf');
+}
+
+.material-icons {
+    -fx-font-family: 'Material Icons';
+    font-family: 'Material Icons';
+} 

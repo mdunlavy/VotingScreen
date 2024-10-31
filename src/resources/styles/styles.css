@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+@font-face {
+    font-family: 'Material Icons';
+    src: url('../fonts/MaterialIcons-Regular.ttf');
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    -fx-font-family: 'Material Icons';
+    font-size: 24px;
+    -fx-font-size: 24px;
+}
