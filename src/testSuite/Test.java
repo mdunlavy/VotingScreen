@@ -31,9 +31,16 @@ public class Test {
 
     private static void startCommandLineInput() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("CLI ready. Type 'status' to print submitted votes, 'set_ballot' to set the ballot, or " +
-                "'unlock' to unlock the controller");
-
+        System.out.println("CLI ready.");
+        System.out.println("Type:");
+        System.out.println("  'turn on'        - to turn on the screen");
+        System.out.println("  'turn off'       - to to turn off the screen");
+        System.out.println("  'status'         - to print submitted votes");
+        System.out.println("  'set ballot'     - to set the ballot");
+        System.out.println("  'clear ballot'   - to clear the ballot");
+        System.out.println("  'unlock user'    - to unlock current user");
+        System.out.println("  'lock user'      - to lock current user");
+        System.out.println("  'unlock session' - to unlock the session");
         while (true) {
             System.out.print("> ");
             String command = scanner.nextLine().trim().toLowerCase();
