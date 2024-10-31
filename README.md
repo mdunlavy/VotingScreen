@@ -1,4 +1,4 @@
-# CLI Commands
+# USAGE
 
 The following commands are available in this CLI application. Each command interacts with the `ScreenController` class to manage the status, user access, and ballot details of an election system.
 
