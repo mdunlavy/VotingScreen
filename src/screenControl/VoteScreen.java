@@ -291,13 +291,15 @@ public class VoteScreen {
         button.setOnMouseEntered(e -> button.setStyle(
                 "-fx-background-color: darkblue; " +
                         "-fx-text-fill: white; " +
+                        "-fx-border-color: darkgray; " +
                         "-fx-border-radius: 10; " +
                         "-fx-background-radius: 10; " +
                         "-fx-padding: 10px;"
         ));
         button.setOnMouseExited(e -> button.setStyle(
                 "-fx-background-color: lightgray; " +
-                        "-fx-text-fill: white; " +
+                        "-fx-text-fill: black; " +
+                        "-fx-border-color: darkgray; " +
                         "-fx-border-radius: 10; " +
                         "-fx-background-radius: 10; " +
                         "-fx-padding: 10px;"

@@ -31,7 +31,8 @@ public class Test {
 
     private static void startCommandLineInput() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("CLI ready. Type 'status' to print submitted votes or 'set_ballot' to set the ballot.");
+        System.out.println("CLI ready. Type 'status' to print submitted votes, 'set_ballot' to set the ballot, or " +
+                "'unlock' to unlock the controller");
 
         while (true) {
             System.out.print("> ");
@@ -64,7 +65,7 @@ public class Test {
                     scanner.close();
                     return;
                 default:
-                    System.out.println("Unknown command. Please type 'status', 'set_ballot', 'clear_ballot', or 'exit'.");
+                    System.out.println("Unknown command. Please type 'status', 'set_ballot', 'clear_ballot', 'unlock, 'lock, or 'exit'.");
             }
         }
     }
