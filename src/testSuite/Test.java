@@ -39,6 +39,14 @@ public class Test {
             String command = scanner.nextLine().trim().toLowerCase();
 
             switch (command) {
+                case "turn on":
+                    scr.turnOn();
+                    System.out.println("Screen turned on");
+                    break;
+                case "turn off":
+                    scr.turnOff();
+                    System.out.println("Screen turned off");
+                    break;
                 case "status":
                     printSubmittedVotes();
                     break;

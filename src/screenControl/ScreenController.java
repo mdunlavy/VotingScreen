@@ -1,6 +1,7 @@
 package screenControl;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -22,6 +23,7 @@ public class ScreenController extends Application {
     private final List<VoteScreen> voteScreens = new ArrayList<>();
     private final List<Proposition> submittedVotes = new ArrayList<>();
     private int currentScreenIndex = 0;
+    private boolean isOn = false;
     private boolean unlockedForTheUser = false;
     private boolean unlockedForTheDay = false;
 
@@ -52,12 +54,19 @@ public class ScreenController extends Application {
     }
 
     private void showScreen(int index) {
-        if (index >= 0 && index <= voteScreens.size()) {
+        if (index >= 0 && index <= voteScreens.size() && isOn) {
             currentScreenIndex = index;
             VoteScreen currentVoteScreen = voteScreens.get(index);
             Scene scene = currentVoteScreen.draw();
             primaryStage.setScene(scene);
             primaryStage.setTitle("Voting System - Screen " + (index + 1));
+            primaryStage.show();
+        } else if (!isOn) {
+            currentScreenIndex = index;
+            VoteScreen currentVoteScreen = voteScreens.get(index);
+            Scene scene = currentVoteScreen.drawOffScreen();
+            primaryStage.setScene(scene);
+            primaryStage.setTitle("Voting System");
             primaryStage.show();
         }
     }
@@ -233,39 +242,82 @@ public class ScreenController extends Application {
         return instance;
     }
 
-    // Screen Controller API methods below
+    // Screen Controller API methods below\
+
+    public void turnOn() {
+        this.isOn = true;
+        setupVotingProcess();
+        Platform.runLater(() -> {
+            instance.showScreen(0);
+        });
+    }
+
+    public void turnOff() {
+        this.isOn = false;
+        setupVotingProcess();
+        Platform.runLater(() -> {
+            instance.showScreen(0);
+        });
+    }
 
     // Getter to return the propositions array
+    // TODO We should make it so when we retrieve votes, they're cleared
     public List<Proposition> getSubmittedVotes() {
-        return this.submittedVotes;
+        List<Proposition> tempSubmittedVotes = new ArrayList<>(this.submittedVotes);
+        this.submittedVotes.clear();
+        return tempSubmittedVotes;
     }
 
     // Method to unlock the voting process
     public void unlockForUser() {
-        this.unlockedForTheUser = true;
+        if (isOn) {
+            this.unlockedForTheUser = true;
+            setupVotingProcess();
+            Platform.runLater(() -> {
+                instance.showScreen(0);
+            });
+        }
     }
 
     // Method to unlock the voting process
     public void lockForUser() {
-        this.unlockedForTheUser = false;
+        if (isOn) {
+            this.unlockedForTheUser = false;
+            Platform.runLater(() -> {
+                instance.showScreen(0);
+            });
+        }
     }
 
     // Method to unlock the voting process
     public void unlockVotingSession() {
-        this.unlockedForTheDay = true;
+        if (isOn) {
+            this.unlockedForTheDay = true;
+            setupVotingProcess();
+            Platform.runLater(() -> {
+                instance.showScreen(0);
+            });
+        }
     }
 
     // Method to unlock the voting process
     public void lockVotingSession() {
-        this.unlockedForTheDay = false;
+        if (isOn) {
+            this.unlockedForTheDay = false;
+            Platform.runLater(() -> {
+                instance.showScreen(0);
+            });
+        }
     }
 
     public void setPropositions(List<Proposition> propositions) {
-        if (currentScreenIndex != 0) {
-            return;
+        if (this.isOn) {
+            this.propositions = propositions;
+            setupVotingProcess();
+            Platform.runLater(() -> {
+                instance.showScreen(0);
+            });
         }
-        this.propositions = propositions;
-        setupVotingProcess();
     }
 
     public static void main(String[] args) {

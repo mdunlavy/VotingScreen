@@ -41,6 +41,13 @@ public class VoteScreen {
         }
     }
 
+    public Scene drawOffScreen() {
+        VBox layout = new VBox();
+        layout.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+
+        return new Scene(layout, 400, 600);
+    }
+
     private Scene createWelcomeScreen() {
         Label welcomeToLabel = new Label("Welcome to");
         welcomeToLabel.setFont(Font.font("Georgia", FontWeight.EXTRA_BOLD, 36));
