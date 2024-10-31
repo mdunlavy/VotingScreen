@@ -241,22 +241,22 @@ public class ScreenController extends Application {
     }
 
     // Method to unlock the voting process
-    public void unlockForTheUser() {
+    public void unlockForUser() {
         this.unlockedForTheUser = true;
     }
 
     // Method to unlock the voting process
-    public void lockForTheUser() {
+    public void lockForUser() {
         this.unlockedForTheUser = false;
     }
 
     // Method to unlock the voting process
-    public void unlockForTheDay() {
+    public void unlockVotingSession() {
         this.unlockedForTheDay = true;
     }
 
     // Method to unlock the voting process
-    public void lockForTheDay() {
+    public void lockVotingSession() {
         this.unlockedForTheDay = false;
     }
 

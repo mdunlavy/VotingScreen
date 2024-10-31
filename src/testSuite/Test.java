@@ -41,21 +41,27 @@ public class Test {
                 case "status":
                     printSubmittedVotes();
                     break;
-                case "unlock":
-                    scr.unlockForTheUser();
+                case "unlock session":
+                    scr.unlockVotingSession();
+                    System.out.println("Voting session unlocked");
+                    break;
+                case "lock session":
+                    scr.lockVotingSession();
+                    System.out.println("Voting session locked");
+                    break;
+                case "unlock user":
+                    scr.unlockForUser();
                     System.out.println("Controller unlocked!");
                     break;
-                case "lock":
-                    scr.lockForTheUser();
+                case "lock user":
+                    scr.lockForUser();
                     System.out.println("Controller locked!");
                     break;
-                // Even though this clears the ballot, it does this by passing an empty list of propositions
-                // To test what happens when the list of propositions is changed
-                case "clear_ballot":
+                case "clear ballot":
                     scr.setPropositions(new ArrayList<>());
                     System.out.println("Ballot cleared");
                     break;
-                case "set_ballot":
+                case "set ballot":
                     scr.setPropositions(propositions.getListOfPropositions());
                     System.out.println("Ballot set");
                     break;
